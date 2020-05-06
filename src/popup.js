@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     if(title == "" || title === " ") {
-      document.getElementById('errorText').innerHTML = "Your workflow must be named";
+      document.getElementById('errorText').innerHTML = "Your tab group must be named";
     } else if (flag) {
-      document.getElementById('errorText').innerHTML = "You workflows may not have duplicate names";
+      document.getElementById('errorText').innerHTML = "You tab group may not have duplicate names";
     } else {
       document.getElementById('errorText').innerHTML = "";
       chrome.tabs.query({highlighted:true}, tabs => {
@@ -47,14 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function assignButtons() {
   for (let x = 0; x < workflows.length; x++) {
-    delButton = document.getElementById('del' + workflows[x].title);
+    let delButton = document.getElementById('del' + workflows[x].title);
     delButton.addEventListener('click', () => {
       workflows = workflows.slice(0, x).concat(workflows.slice(x+1))
       chrome.storage.sync.set({'workflows' : workflows}, () => {});
       printWorkflows();
     });
 
-    openButton = document.getElementById('open' + workflows[x].title);
+    let openButton = document.getElementById('open' + workflows[x].title);
     openButton.addEventListener('click', () => {
       console.log(x);
       for (let y = 0; y < workflows[x].pages.length; y++) {
@@ -62,6 +62,14 @@ function assignButtons() {
       }
     });
   }
+  let openAllButton = document.getElementById('openAll');
+  openAllButton.addEventListener('click', () => {
+    for (let x = 0; x < workflows.length; x++) {
+      for (let y = 0; y < workflows[x].pages.length; y++) {
+        chrome.tabs.create({ url : workflows[x].pages[y].url });
+      }
+    }
+  });
 }
 function printWorkflows() {
   let str = "";

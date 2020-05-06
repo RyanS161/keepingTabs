@@ -13,9 +13,11 @@
     }
     h1 {
       font-size: 30px;
+      vertical-align: middle;
     }
     h2 {
       font-size: 20px;
+      vertical-align: middle;
     }
     #tabAdder {
       height: 25px;
@@ -64,14 +66,17 @@
     <h1><img id="logoImg" src="icons/logo.png"> Keeping tabs</h1>
     <p>Hold shift and select the tabs you'd like to save, then
       add a title and click the + to save for later reopening.
-      Open your workflow with the <img class='openButton' src="icons/newWindow.svg"> button. </p>
+      Open your tab group with the <img class='openButton' src="icons/newWindow.svg"> button. </p>
     <div>
       <input type='text' class='nameInput' id='wfName' placeholder="Enter a title here">
-      <a><img id="tabAdder" src="icons/plus.svg"></a>
+      <img id="tabAdder" src="icons/plus.svg">
       <br>
       <span id="errorText"></span>
     </div>
-    <h2>Workflows</h2>
+    <div>
+      <h2 style="display: inline-block;">Tab Groups</h2>
+      <img class='openButton' id="openAll" style="height:20px;width:20px;" src="icons/newWindow.svg">
+    </div>
     <div id='tabLists'><span id='addTo'></span></div>
   </div>
 </body>
