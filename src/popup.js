@@ -10,39 +10,54 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   let add = document.getElementById('tabAdder');
-  add.addEventListener('click', () => {
-    let title = document.getElementById('wfName').value;
-    let flag = false;
-    for (let x = 0; x < workflows.length; x++) {
-      if (title === workflows[x].title) {
-        flag = true;
+  add.addEventListener('click', () => addTabs());
+
+  let deleter = document.getElementById('tabDeleter');
+  deleter.addEventListener('click', () => {
+    addTabs();
+    chrome.tabs.query({highlighted:true}, tabs => {
+      let ids = []
+      for (let x in tabs) {
+        ids.push(tabs[x].id);
+        console.log(ids);
       }
-    }
-    if(title == "" || title === " ") {
-      document.getElementById('errorText').innerHTML = "Your tab group must be named";
-    } else if (flag) {
-      document.getElementById('errorText').innerHTML = "Your tab group may not have duplicate names";
-    } else {
-      document.getElementById('errorText').innerHTML = "";
-      chrome.tabs.query({highlighted:true}, tabs => {
-        let dict = {"title" : title,
-                    "pages" : [],};
-        for (let x = 0; x < tabs.length; x++) {
-          dict.pages.push({
-            "title" : tabs[x].title,
-            "url" : tabs[x].url,
-          });
-        }
-        workflows.push(dict);
-        chrome.storage.sync.set({'workflows' : workflows}, () => {});
-      });
-    }
-    setTimeout(() => {
-      document.getElementById('wfName').value = "";
-      printWorkflows();
-    }, 0);
+      chrome.tabs.remove(ids);
+    });
   });
 });
+
+function addTabs() {
+  let title = document.getElementById('wfName').value;
+  let flag = false;
+  for (let x = 0; x < workflows.length; x++) {
+    if (title === workflows[x].title) {
+      flag = true;
+    }
+  }
+  if(title == "" || title === " ") {
+    document.getElementById('errorText').innerHTML = "Your tab group must be named";
+  } else if (flag) {
+    document.getElementById('errorText').innerHTML = "Your tab group may not have duplicate names";
+  } else {
+    document.getElementById('errorText').innerHTML = "";
+    chrome.tabs.query({highlighted:true}, tabs => {
+      let dict = {"title" : title,
+                  "pages" : [],};
+      for (let x = 0; x < tabs.length; x++) {
+        dict.pages.push({
+          "title" : tabs[x].title,
+          "url" : tabs[x].url,
+        });
+      }
+      workflows.push(dict);
+      chrome.storage.sync.set({'workflows' : workflows}, () => {});
+    });
+  }
+  setTimeout(() => {
+    document.getElementById('wfName').value = "";
+    printWorkflows();
+  }, 0);
+}
 
 
 function assignButtons() {

@@ -14,7 +14,7 @@ h2 {
   font-size: 20px;
   vertical-align: middle;
 }
-#tabAdder {
+#tabAdder, #tabDeleter {
   height: 25px;
   width: 25px;
   vertical-align: middle;
@@ -40,7 +40,7 @@ h2 {
   width: 13px;
   vertical-align: middle;
 }
-.deleteButton:hover, .openButton:hover, #tabAdder:hover {
+.deleteButton:hover, .openButton:hover, #tabAdder:hover, #tabDeleter:hover {
   background-color: #313131;
   border-radius: 5px;
   cursor: pointer;
