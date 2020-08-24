@@ -40,6 +40,11 @@ h2 {
   width: 13px;
   vertical-align: middle;
 }
+.deleteButton:hover, .openButton:hover, #tabAdder:hover {
+  background-color: #313131;
+  border-radius: 5px;
+  cursor: pointer;
+}
 .nameInput {
   background-color: #212121;
   border: 1px solid lightgreen;

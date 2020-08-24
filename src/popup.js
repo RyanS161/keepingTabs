@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(title == "" || title === " ") {
       document.getElementById('errorText').innerHTML = "Your tab group must be named";
     } else if (flag) {
-      document.getElementById('errorText').innerHTML = "You tab group may not have duplicate names";
+      document.getElementById('errorText').innerHTML = "Your tab group may not have duplicate names";
     } else {
       document.getElementById('errorText').innerHTML = "";
       chrome.tabs.query({highlighted:true}, tabs => {
