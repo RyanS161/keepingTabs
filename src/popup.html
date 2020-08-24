@@ -7,11 +7,12 @@
 <body>
   <div class='container'>
     <h1><img id="logoImg" src="icons/128.png"> Keeping tabs</h1>
-    <p>Hold control and select the tabs you'd like to save, then
-      add a title and click the + to save for later reopening.
-      Open your tab group with the <img class='openButton' src="icons/newWindow.svg"> button. </p>
+    <p>Hold <code>ctrl</code> and select the tabs you'd like to save,
+      add a title, and click the <img id='addExample' src="icons/plus.svg"> or
+      <img id='deleteExample' src="icons/x.svg"> to save for later reopening.
+      Open your tabs later by clicking on the title.</p>
     <div>
-      <input type='text' class='nameInput' id='wfName' placeholder="Enter a title here">
+      <input type='text' class='nameInput' id='wfName' placeholder="Enter a title here" autofocus>
       <img id="tabAdder" src="icons/plus.svg">
       <img id="tabDeleter" src="icons/x.svg">
       <br>
@@ -19,7 +20,6 @@
     </div>
     <div>
       <h2 style="display: inline-block;">Tab Groups</h2>
-      <img class='openButton' id="openAll" style="height:20px;width:20px;" src="icons/newWindow.svg">
     </div>
     <div id='tabLists'><span id='addTo'></span></div>
   </div>

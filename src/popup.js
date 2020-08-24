@@ -62,11 +62,18 @@ function addTabs() {
 
 function assignButtons() {
   for (let x = 0; x < workflows.length; x++) {
-    let delButton = document.getElementById('del' + workflows[x].title);
-    delButton.addEventListener('click', () => {
-      workflows = workflows.slice(0, x).concat(workflows.slice(x+1))
-      chrome.storage.sync.set({'workflows' : workflows}, () => {});
-      printWorkflows();
+    let addButton = document.getElementById('add' + workflows[x].title);
+    addButton.addEventListener('click', () => {
+      chrome.tabs.query({highlighted:true}, tabs => {
+        for (let x = 0; x < tabs.length; x++) {
+          workflows[x].pages.push({
+            "title" : tabs[x].title,
+            "url" : tabs[x].url,
+          });
+        }
+        chrome.storage.sync.set({'workflows' : workflows}, () => {});
+      });
+      setTimeout(() => printWorkflows(), 0);
     });
 
     let openButton = document.getElementById('open' + workflows[x].title);
@@ -76,29 +83,46 @@ function assignButtons() {
         chrome.tabs.create({ url : workflows[x].pages[y].url });
       }
     });
-  }
-  let openAllButton = document.getElementById('openAll');
-  openAllButton.addEventListener('click', () => {
-    for (let x = 0; x < workflows.length; x++) {
-      for (let y = 0; y < workflows[x].pages.length; y++) {
+
+    let delButton = document.getElementById('del' + workflows[x].title);
+    delButton.addEventListener('click', () => {
+      workflows = workflows.slice(0, x).concat(workflows.slice(x+1));
+      chrome.storage.sync.set({'workflows' : workflows}, () => {});
+      printWorkflows();
+    });
+
+    for (let y = 0; y < workflows[x].pages.length; y++) {
+      let link = document.getElementById('link' + workflows[x].pages[y].url);
+      link.addEventListener('click', () => {
         chrome.tabs.create({ url : workflows[x].pages[y].url });
-      }
+      });
+
+      let deleteLink = document.getElementById('delete' + workflows[x].pages[y].url);
+      deleteLink.addEventListener('click', () => {
+        workflows[x].pages = workflows[x].pages.slice(0, y).concat(workflows[x].pages.slice(y+1))
+        if (workflows[x].pages.length == 0) {
+          workflows = workflows.slice(0, x).concat(workflows.slice(x+1));
+        }
+        chrome.storage.sync.set({'workflows' : workflows}, () => {});
+        printWorkflows();
+      });
     }
-  });
+  }
 }
 function printWorkflows() {
   let str = "";
   for (let x = 0; x < workflows.length; x++) {
     str += `<div class='workflow'>
               <div>
-                <span class='title'>${workflows[x].title}</span>
-                <a id='open${workflows[x].title}'><img class='openButton' src="icons/newWindow.svg"></a>
+                <span class='title openButton' id='open${workflows[x].title}'>${workflows[x].title}</span>
+                <a id='add${workflows[x].title}'><img class='addButton' src="icons/plus.svg"></a>
                 <a id='del${workflows[x].title}'><img class='deleteButton' src="icons/trash.svg"></a>
               </div>`;
     for (let y = 0; y < workflows[x].pages.length; y++) {
       let title = (workflows[x].pages[y].title.length > 40)
       ? `${workflows[x].pages[y].title.slice(0, 41)}. . .` : `${workflows[x].pages[y].title}`;
-      str += `<a class='link' href='${workflows[x].pages[y].url}'>${title}</a><br>`;
+      str += `<a class='link' id='link${workflows[x].pages[y].url}'>${title}</a>
+      <a id='delete${workflows[x].pages[y].url}'><img class='deleteButton2' src="icons/wx.svg"></a><br>`;
     }
     str += "</div>"
   }
