@@ -14,15 +14,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let deleter = document.getElementById('tabDeleter');
   deleter.addEventListener('click', () => {
-    addTabs();
-    chrome.tabs.query({highlighted:true}, tabs => {
-      let ids = []
-      for (let x in tabs) {
-        ids.push(tabs[x].id);
-        console.log(ids);
-      }
-      chrome.tabs.remove(ids);
-    });
+    if(addTabs()) {
+      chrome.tabs.query({highlighted:true, currentWindow:true}, tabs => {
+        let ids = []
+        for (let x in tabs) {
+          ids.push(tabs[x].id);
+          console.log(ids);
+        }
+        chrome.tabs.remove(ids);
+      });
+    }
   });
 });
 
@@ -36,11 +37,13 @@ function addTabs() {
   }
   if(title == "" || title === " ") {
     document.getElementById('errorText').innerHTML = "Your tab group must be named";
+    return false;
   } else if (flag) {
     document.getElementById('errorText').innerHTML = "Your tab group may not have duplicate names";
+    return false;
   } else {
     document.getElementById('errorText').innerHTML = "";
-    chrome.tabs.query({highlighted:true}, tabs => {
+    chrome.tabs.query({highlighted:true, currentWindow:true}, tabs => {
       let dict = {"title" : title,
                   "pages" : [],};
       for (let x = 0; x < tabs.length; x++) {
@@ -57,6 +60,7 @@ function addTabs() {
     document.getElementById('wfName').value = "";
     printWorkflows();
   }, 0);
+  return true;
 }
 
 
@@ -64,7 +68,7 @@ function assignButtons() {
   for (let x = 0; x < workflows.length; x++) {
     let addButton = document.getElementById('add' + workflows[x].title);
     addButton.addEventListener('click', () => {
-      chrome.tabs.query({highlighted:true}, tabs => {
+      chrome.tabs.query({highlighted:true, currentWindow:true}, tabs => {
         for (let x = 0; x < tabs.length; x++) {
           workflows[x].pages.push({
             "title" : tabs[x].title,
