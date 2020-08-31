@@ -119,7 +119,7 @@ function printWorkflows() {
     str += `<div class='workflow'>
               <div>
                 <span class='title openButton' id='open${workflows[x].title}'>${workflows[x].title}</span>
-                <a id='add${workflows[x].title}'><img class='addButton' src="icons/plus.svg"></a>
+                <a id='add${workflows[x].title}'><img class='addButton' src="icons/plus.svg" title="Add current tab"></a>
                 <a id='del${workflows[x].title}'><img class='deleteButton' src="icons/trash.svg"></a>
               </div>`;
     for (let y = 0; y < workflows[x].pages.length; y++) {
