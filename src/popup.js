@@ -69,10 +69,10 @@ function assignButtons() {
     let addButton = document.getElementById('add' + workflows[x].title);
     addButton.addEventListener('click', () => {
       chrome.tabs.query({highlighted:true, currentWindow:true}, tabs => {
-        for (let x = 0; x < tabs.length; x++) {
+        for (let y = 0; y < tabs.length; y++) {
           workflows[x].pages.push({
-            "title" : tabs[x].title,
-            "url" : tabs[x].url,
+            "title" : tabs[y].title,
+            "url" : tabs[y].url,
           });
         }
         chrome.storage.sync.set({'workflows' : workflows}, () => {});
@@ -82,7 +82,6 @@ function assignButtons() {
 
     let openButton = document.getElementById('open' + workflows[x].title);
     openButton.addEventListener('click', () => {
-      console.log(x);
       for (let y = 0; y < workflows[x].pages.length; y++) {
         chrome.tabs.create({ url : workflows[x].pages[y].url });
       }
