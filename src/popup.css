@@ -36,12 +36,12 @@ h2 {
   text-decoration: none;
   color: #f5f5f5;
 }
-.deleteButton, .openButton, .addButton, #addExample, #deleteExample {
+.deleteButton, .openButton, .addButton, .displayButton, .hideButton, #addExample, #deleteExample {
   height: 13px;
   width: 13px;
   vertical-align: middle;
 }
-.deleteButton:hover, .openButton:hover, .addButton:hover, #tabAdder:hover, #tabDeleter:hover {
+.deleteButton:hover, .openButton:hover, .addButton:hover, .displayButton, .hideButton, #tabAdder:hover, #tabDeleter:hover {
   background-color: #313131;
   border-radius: 5px;
   cursor: pointer;
@@ -66,3 +66,6 @@ h2 {
   color: red;
   font-size: 12px;
 }
+ .displayButton, .hideButton {
+   margin-left: 10px;
+ }

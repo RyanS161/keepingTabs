@@ -45,7 +45,8 @@ function addTabs() {
     document.getElementById('errorText').innerHTML = "";
     chrome.tabs.query({highlighted:true, currentWindow:true}, tabs => {
       let dict = {"title" : title,
-                  "pages" : [],};
+                  "pages" : [],
+                  "displayed" : true,};
       for (let x = 0; x < tabs.length; x++) {
         dict.pages.push({
           "title" : tabs[x].title,
@@ -94,21 +95,38 @@ function assignButtons() {
       printWorkflows();
     });
 
-    for (let y = 0; y < workflows[x].pages.length; y++) {
-      let link = document.getElementById('link' + workflows[x].pages[y].url);
-      link.addEventListener('click', () => {
-        chrome.tabs.create({ url : workflows[x].pages[y].url });
-      });
-
-      let deleteLink = document.getElementById('delete' + workflows[x].pages[y].url);
-      deleteLink.addEventListener('click', () => {
-        workflows[x].pages = workflows[x].pages.slice(0, y).concat(workflows[x].pages.slice(y+1))
-        if (workflows[x].pages.length == 0) {
-          workflows = workflows.slice(0, x).concat(workflows.slice(x+1));
-        }
-        chrome.storage.sync.set({'workflows' : workflows}, () => {});
+    let displayButton = document.getElementById('display' + workflows[x].title);
+    if (displayButton != null) {
+      displayButton.addEventListener('click', () => {
+        workflows[x].displayed = true;
         printWorkflows();
       });
+    }
+
+    let hideButton = document.getElementById('hide' + workflows[x].title);
+    if (hideButton != null) {
+      hideButton.addEventListener('click', () => {
+        workflows[x].displayed = false;
+        printWorkflows();
+      });
+    }
+
+    for (let y = 0; y < workflows[x].pages.length; y++) {
+      let link = document.getElementById('link' + workflows[x].pages[y].url);
+      let deleteLink = document.getElementById('delete' + workflows[x].pages[y].url);
+      if (link != null) {
+        link.addEventListener('click', () => {
+          chrome.tabs.create({ url : workflows[x].pages[y].url });
+        });
+        deleteLink.addEventListener('click', () => {
+          workflows[x].pages = workflows[x].pages.slice(0, y).concat(workflows[x].pages.slice(y+1))
+          if (workflows[x].pages.length == 0) {
+            workflows = workflows.slice(0, x).concat(workflows.slice(x+1));
+          }
+          chrome.storage.sync.set({'workflows' : workflows}, () => {});
+          printWorkflows();
+        });
+      }
     }
   }
 }
@@ -119,13 +137,20 @@ function printWorkflows() {
               <div>
                 <span class='title openButton' id='open${workflows[x].title}'>${workflows[x].title}</span>
                 <a id='add${workflows[x].title}'><img class='addButton' src="icons/plus.svg" title="Add current tab"></a>
-                <a id='del${workflows[x].title}'><img class='deleteButton' src="icons/trash.svg"></a>
-              </div>`;
-    for (let y = 0; y < workflows[x].pages.length; y++) {
-      let title = (workflows[x].pages[y].title.length > 40)
-      ? `${workflows[x].pages[y].title.slice(0, 41)}. . .` : `${workflows[x].pages[y].title}`;
-      str += `<a class='link' id='link${workflows[x].pages[y].url}'>${title}</a>
-      <a id='delete${workflows[x].pages[y].url}'><img class='deleteButton2' src="icons/wx.svg"></a><br>`;
+                <a id='del${workflows[x].title}'><img class='deleteButton' src="icons/trash.svg"></a>`
+    if (workflows[x].displayed == true) {
+      str += `<a id='hide${workflows[x].title}'><img class='hideButton' src="icons/caret_down.svg"></a>`;
+    } else {
+      str += `<a id='display${workflows[x].title}'><img class='displayButton' src="icons/caret_right.svg"></a>`;
+    }
+    str += `</div>`;
+    if (workflows[x].displayed == true) {
+      for (let y = 0; y < workflows[x].pages.length; y++) {
+        let title = (workflows[x].pages[y].title.length > 40)
+        ? `${workflows[x].pages[y].title.slice(0, 41)}. . .` : `${workflows[x].pages[y].title}`;
+        str += `<a class='link' id='link${workflows[x].pages[y].url}'>${title}</a>
+        <a id='delete${workflows[x].pages[y].url}'><img class='deleteButton2' src="icons/wx.svg"></a><br>`;
+      }
     }
     str += "</div>"
   }
