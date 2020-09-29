@@ -100,6 +100,7 @@ function assignButtons() {
       displayButton.addEventListener('click', () => {
         workflows[x].displayed = true;
         printWorkflows();
+        chrome.storage.sync.set({'workflows' : workflows}, () => {});
       });
     }
 
@@ -108,6 +109,7 @@ function assignButtons() {
       hideButton.addEventListener('click', () => {
         workflows[x].displayed = false;
         printWorkflows();
+        chrome.storage.sync.set({'workflows' : workflows}, () => {});
       });
     }
 

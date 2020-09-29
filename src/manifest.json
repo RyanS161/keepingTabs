@@ -1,7 +1,7 @@
 {
   "manifest_version" : 2,
   "name" : "Keeping Tabs",
-  "version" : "0.1.5",
+  "version" : "0.1.6",
   "description" : "A chrome extension aiming to simplify the surplus of tabs in one's browser",
   "icons" : {"128" : "icons/128.png",
               "48" : "icons/48.png"
